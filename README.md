@@ -6,6 +6,7 @@ Inventory and asset management application built using MEAN stack (MongoDB, Expr
 
 #### History
 
+*2014/05/27* - Change bootstrap theme
 *2014/05/16* - Remove references to elasticsearch
 
 ----
