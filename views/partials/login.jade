@@ -16,7 +16,7 @@ doctype
 .container
     div
         alert(ng-repeat="alert in inlineAlerts", type="alert.type", close="closeInlineAlert($index)") {{ alert.msg }}
-    form.form-signin(role="form" novalidate)
+    form.form-signin(role="form", novalidate)
         h2.form-signin-heading Please Login
         input.form-control.input-sm(type="text", ng-model="model.username", placeholder="Username", required, autofocus)
         input.form-control.input-sm(type="password", ng-model="model.password", placeholder="Password", required)

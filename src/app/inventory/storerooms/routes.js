@@ -47,7 +47,7 @@ angular.module('app')
                         return {
                             colDefs: [
                                 {title: 'Name', sortField: 'name', visible: true, render: function(row){
-                                    return '<a href="'+row.href+'">'+row.source.name+'</a>';
+                                    return '<a href="'+row.href+'">'+row.name+'</a>';
                                 }},
                                 {title: 'Description', sortField: 'description.raw', dataField: 'description', visible: true},
                                 {title: 'Control Account', sortField: 'controlAccount', dataField: 'controlAccount', visible: false},
@@ -58,13 +58,13 @@ angular.module('app')
                                 {title: 'Invoice Var Account', sortField: 'invoiceVarAccount', dataField: 'invoiceVarAccount', visible: false},
                                 {title: 'Currency Var Account', sortField: 'currencyVarAccount', dataField: 'currencyVarAccount', visible: false},
                                 {title: 'Use in PO/PR?', sortField: 'useInPurchasing', visible: false, render: function(row){
-                                    return angular.isDefined(row.source.useInPurchasing) ? (row.source.useInPurchasing ? 'Y' : 'N') : '' ;
+                                    return angular.isDefined(row.useInPurchasing) ? (row.useInPurchasing ? 'Y' : 'N') : '' ;
                                 }},
                                 {title: 'Created At', sortField: 'createdAt', visible: true, render: function(row) {
-                                    return $filter('date')(row.source.createdAt, 'medium');
+                                    return $filter('date')(row.createdAt, 'medium');
                                 }},
                                 {title: 'Updated At', sortField: 'updatedAt', visible: true, render: function(row) {
-                                    return $filter('date')(row.source.updatedAt, 'medium');
+                                    return $filter('date')(row.updatedAt, 'medium');
                                 }}
                             ],
                             actions: [
@@ -156,30 +156,30 @@ angular.module('app')
                     $scope.inventoryGridConfig = {
                         colDefs: [
                             {title: 'Inventory', sortField: 'item._id', visible: true, dataField: '_id', render: function(row) {
-                                var href = $state.href('inventory.inventories.show.balances', {id: row.source._id});
+                                var href = $state.href('inventory.inventories.show.balances', {id: row._id});
                                 return '<a href="'+href+'">View Detail</a>';
                             }},
                             {title: 'Item', sortField: 'item.partNumber.raw', dataField: 'item.partNumber', visible: true, render: function (row) {
-                                var href = $state.href('inventory.items.show.inventory', {id: row.source.item._id});
-                                return '<a href="' + href + '">' + row.source.item.partNumber + '</a>';
+                                var href = $state.href('inventory.items.show.inventory', {id: row.item._id});
+                                return '<a href="' + href + '">' + row.item.partNumber + '</a>';
                             }},
                             {title: 'Description', sortField: 'item.description.raw', visible: true, dataField: 'item.description', cssHeaderClass: 'col-md-4'},
                             {title: 'Type', sortField: 'stockCategory', dataField: 'stockCategory', visible: true},
                             {title: 'Default Bin', sortField: 'defaultBin.raw', dataField: 'defaultBin', visible: true},
                             {title: 'Current Bal', sortField: 'currentBalance', dataField: 'currentBalance', visible: true, render: function (row) {
-                                return $filter('number')(row.source.currentBalance, 2);
+                                return $filter('number')(row.currentBalance, 2);
                             }},
                             {title: 'Qty Available', sortField: 'qtyAvailable', dataField: 'qtyAvailable', visible: true, render: function (row) {
-                                return $filter('number')(row.source.qtyAvailable, 2);
+                                return $filter('number')(row.qtyAvailable, 2);
                             }},
                             {title: 'Qty Reserved', sortField: 'qtyReserved', dataField: 'qtyReserved', visible: true, render: function (row) {
-                                return $filter('number')(row.source.qtyReserved, 2);
+                                return $filter('number')(row.qtyReserved, 2);
                             }},
                             {title: 'Exp Qty', sortField: 'expiredQtyInStock', dataField: 'expiredQtyInStock', visible: false, render: function (row) {
-                                return $filter('number')(row.source.expiredQtyInStock, 2);
+                                return $filter('number')(row.expiredQtyInStock, 2);
                             }},
                             {title: 'Qty Holding', sortField: 'qtyInHoldingLocation', dataField: 'qtyInHoldingLocation', visible: false, render: function (row) {
-                                return $filter('number')(row.source.qtyInHoldingLocation, 2);
+                                return $filter('number')(row.qtyInHoldingLocation, 2);
                             }}
                         ],
                         actions: []

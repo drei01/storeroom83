@@ -92,18 +92,12 @@ angular.module('search.directives', ['ui.bootstrap', 'ngCookies', 'search.servic
 
                 $scope.columnVisibility = searchSettings[$state.current.name][$scope.searchUrl]['colVisibility'] || defaultColumnVisibility();
 
-                var convertElasticSearchResults = function(raw) {
+                var convertSearchResults = function(hits) {
                     return {
-                        total: raw.hits.total,
+                        total: hits.length,
                         page: $scope.searchParams.page,
-                        pages: Math.ceil(raw.hits.total / $scope.itemsPerPage),
-                        items: _.map(raw.hits.hits, function(hit) {
-                            return {
-                                source: hit._source,
-                                href: $state.href($scope.showRoute, {id: hit._id}),
-                                _id: hit._id
-                            }
-                        })
+                        pages: Math.ceil(hits.length / $scope.itemsPerPage),
+                        items: hits
                     }
                 };
 
@@ -176,7 +170,12 @@ angular.module('search.directives', ['ui.bootstrap', 'ngCookies', 'search.servic
                             }
                         }
                     } else {
-                        q = { match_all: {} }
+                        q = {
+                            query_string: {
+                                all: true,
+                                fields: $scope.searchFields
+                            }
+						}
                     }
 
                     if (angular.isDefined($scope.filter)) {
@@ -200,7 +199,7 @@ angular.module('search.directives', ['ui.bootstrap', 'ngCookies', 'search.servic
                         size: $scope.itemsPerPage,
                         query: q
                     }).then(function (resp) {
-                        $scope.results = convertElasticSearchResults(resp);
+                        $scope.results = convertSearchResults(resp);
                     }, function (err) {
                         console.trace(err);
                         alertService.inline('danger', "Error searching for "+$scope.entityName, true);
@@ -208,11 +207,11 @@ angular.module('search.directives', ['ui.bootstrap', 'ngCookies', 'search.servic
                 };
 
                 $scope.confirmDelete = function(row) {
-                    confirmService.confirm('Are you sure you want to delete '+$scope.entityName+' '+row.source[$scope.labelField], function () {
+                    confirmService.confirm('Are you sure you want to delete '+$scope.entityName+' '+row[$scope.labelField], function () {
                         $scope.onConfirmDelete({id:row._id}).then(function(){
                             $scope.results.items = _.without($scope.results.items, row);
                             $scope.results.total--;
-                            alertService.growl('success', $scope.entityName+' '+row.source.name+' successfully removed.', true);
+                            alertService.growl('success', $scope.entityName+' '+row.name+' successfully removed.', true);
                         }, function(err){
                             alertService.inline('danger', err.message, true);
                         });
@@ -229,7 +228,7 @@ angular.module('search.directives', ['ui.bootstrap', 'ngCookies', 'search.servic
                 };
 
                 $scope.renderDataField = function(row, dataField) {
-                    var v = row.source;
+                    var v = row;
                     var arr = dataField.split('.');
                     for(var i=0; i< arr.length; i++) {
                         v = v[arr[i]];
